@@ -1,39 +1,58 @@
-<div class="container mt-3">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Título</th>
-        <th>Descripción</th>
-        <th>Completado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody *ngFor="let tarea of tareas; let i = index">
-      <tr>
-        <td>{{ i + 1 }}</td>
-        <td>{{ tarea.titulo }}</td>
-        <td>{{ tarea.descripcion }}</td>
-        <td><input type="checkbox" [checked]="tarea.completado" disabled /></td>
-        <td>
-          <button
-            class="btn btn-sm btn-info"
-            routerLink="/tareas/{{ tarea.id }}/edit"
-          >
-            Actualizar
-          </button>
-          &nbsp;
-          <button
-            class="btn btn-sm btn-danger"
-            (click)="eliminarTarea(tarea.id)"
-          >
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="mt-3">
-    <a routerLink="/tareas/new" class="btn btn-success">Agregar tarea</a>
-  </div>
+<div fxLayoutAlign="center center">
+  <mat-form-field fxFlex="60%">
+    <input
+      matInput
+      type="text"
+      (keyup)="buscar($event)"
+      placeholder="Ingrese texto"
+    />
+  </mat-form-field>
 </div>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+  <ng-container matColumnDef="titulo">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Título </th>
+    <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="descripcion">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+    <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="completado">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Completado </th>
+    <td mat-cell *matCellDef="let element">
+      <mat-checkbox [(ngModel)]="element.completado" [disabled]="true"></mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="accion">
+    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="abrirDialog('edit', element.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button  mat-icon-button (click)="eliminarTarea(element.id)" onfocus="this.blur()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator
+  #paginacion
+  [pageSize]="7"
+  [pageSizeOptions]="[7, 15, 20, 30]"
+  aria-label="Select page"
+>
+</mat-paginator>
+
+<button mat-fab id="boton-agregar" color="warn" (click)="abrirDialog('add')">
+  <mat-icon>add</mat-icon>
+</button>
+

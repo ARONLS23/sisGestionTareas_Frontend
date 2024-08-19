@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { MaterialModule } from '../../material.module';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [MaterialModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
